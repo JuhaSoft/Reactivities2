@@ -5,7 +5,7 @@ import axios from 'axios';
 import { IActivity } from '../models/activity';
 import NavBar from '../../features/nav/NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-// interface IState{
+// interface IState{ 
 //   activities: IActivity[]
 // }
 // class App extends Component<{},IState> {
@@ -14,6 +14,11 @@ const App =() => {
   const [selectedActivity, setselectedActivity] = useState<IActivity | null>(null);
   const handleSelectActivity = (id:string) => {
     setselectedActivity(activities.filter(a =>a.id === id )[0])
+  }
+  const [editMode, setEditMode] = useState(false);
+  const handleOpenCreateForm = () => {
+      setselectedActivity(null);
+      setEditMode(true);
   }
   useEffect(() => {
     axios.get<IActivity[]>('http://localhost:5000/api/Activities/')
@@ -24,10 +29,14 @@ const App =() => {
 
     return (
       <Fragment>
-         <NavBar/>
+         <NavBar openCreateForm={handleOpenCreateForm}/>
          <Container style={{marginTop:'5em'}}>
           <ActivityDashboard activities={activities} selectActivity={handleSelectActivity} 
-          selectedActivity={selectedActivity}/>
+          selectedActivity={selectedActivity}
+          editMode={editMode}
+          setEditMode={setEditMode}
+          setselectedActivity={setselectedActivity}
+          />
          </Container>
       </Fragment> 
     );
